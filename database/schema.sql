@@ -31,9 +31,9 @@ CREATE TABLE "public"."messages" (
 
 CREATE TABLE "public"."rooms" (
     "roomId" serial NOT NULL,
-    "userId" integer NOT NULL,
+    "userId" integer,
     "roomName" TEXT NOT NULL,
-    "youtubeVideo" TEXT NOT NULL,
+    "youtubeVideo" TEXT,
     CONSTRAINT "rooms_pk" PRIMARY KEY ("roomId")
 ) WITH (
   OIDS=FALSE
