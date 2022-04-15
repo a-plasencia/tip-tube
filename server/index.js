@@ -14,20 +14,35 @@ const app = express();
 const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
 
-app.post('/api/room/create', (req, res, next) => {
-  const { roomName } = req.body;
-  if (!roomName) {
-    throw new ClientError(400, 'roomName is a required field');
+app.post('/api/create', (req, res, next) => {
+  const { roomName, username, youtubeVideo } = req.body;
+  if (!roomName || !username || !youtubeVideo) {
+    throw new ClientError(400, 'a required field is missing');
   }
-  const sql = `
-  insert into "rooms" ("roomName")
-  values ($1)
+  const sqlRooms = `
+  insert into "rooms" ("roomName", "youtubeVideo")
+  values ($1, $2)
   returning *
   `;
-  const params = [roomName];
-  db.query(sql, params)
+  const paramsRooms = [roomName, youtubeVideo];
+  db.query(sqlRooms, paramsRooms)
     .then(result => {
-      res.status(201).json(result.rows[0]);
+      const roomsResult = result.rows[0];
+      const sqlUsers = `
+      insert into "users" ("username")
+      values ($1)
+      returning *
+      `;
+      const paramsUsers = [username];
+      db.query(sqlUsers, paramsUsers)
+        .then(result => {
+          const userResult = result.rows[0];
+          userResult.room = roomsResult;
+          res.status(201).json(userResult);
+        })
+        .catch(err => {
+          next(err);
+        });
     })
     .catch(err => {
       next(err);
