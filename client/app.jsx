@@ -19,11 +19,18 @@ export default class App extends React.Component {
     });
   }
 
+  renderPage() {
+    const { path } = this.state.route;
+    if (path === '') {
+      return <Home />;
+    }
+  }
+
   render() {
     return (
       <>
         <NavbarScreen />
-        <Home />
+        {this.renderPage()}
       </>
     );
   }
