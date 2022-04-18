@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Navbar from 'react-bootstrap/Navbar';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -44,11 +43,6 @@ export default class Home extends React.Component {
   render() {
     return (
       <>
-        <Navbar bg="dark" variant="dark">
-          <Container>
-            <Navbar.Brand href="#home">Final P</Navbar.Brand>
-          </Container>
-        </Navbar>
         <Container>
           <Form onSubmit={this.handleSubmit}>
            <Row className="justify-content-center mt-5">
