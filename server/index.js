@@ -14,9 +14,34 @@ const app = express();
 const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
 
+app.get('/api/room/:roomId', (req, res, next) => {
+  const roomId = Number(req.params.roomId);
+  if (roomId < 0) {
+    throw new ClientError(400, 'roomId must be a positive integer');
+  }
+
+  const sql = `
+  select "roomName",
+         "youtubeVideo"
+    from "rooms"
+   where "roomId" = $1
+  `;
+  const params = [roomId];
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) {
+        throw new ClientError(404, `cannot find room with roomId ${roomId}`);
+      }
+      res.status(201).json(result.rows[0]);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 app.post('/api/create', (req, res, next) => {
-  const { roomName, username, youtubeVideo } = req.body;
-  if (!roomName || !username || !youtubeVideo) {
+  const { roomName, youtubeVideo } = req.body;
+  if (!roomName || !youtubeVideo) {
     throw new ClientError(400, 'a required field is missing');
   }
   const sqlRooms = `
@@ -28,21 +53,27 @@ app.post('/api/create', (req, res, next) => {
   db.query(sqlRooms, paramsRooms)
     .then(result => {
       const roomsResult = result.rows[0];
-      const sqlUsers = `
-      insert into "users" ("username")
-      values ($1)
-      returning *
-      `;
-      const paramsUsers = [username];
-      db.query(sqlUsers, paramsUsers)
-        .then(result => {
-          const userResult = result.rows[0];
-          userResult.room = roomsResult;
-          res.status(201).json(userResult);
-        })
-        .catch(err => {
-          next(err);
-        });
+      res.status(201).json(roomsResult);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+app.post('/api/user/username', (req, res, next) => {
+  const { username } = req.body;
+  if (!username) {
+    throw new ClientError(400, 'username is a required field');
+  }
+  const sql = `
+  insert into "users" ("username")
+  values ($1)
+  returning *
+  `;
+  const params = [username];
+  db.query(sql, params)
+    .then(result => {
+      res.status(201).json(result.rows[0]);
     })
     .catch(err => {
       next(err);
