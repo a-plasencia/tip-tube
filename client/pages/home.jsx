@@ -36,7 +36,7 @@ export default class Home extends React.Component {
     fetch('/api/create', req)
       .then(res => res.json())
       .then(result => {
-        window.location.hash = `room?roomId=${result.room.roomId}`;
+        window.location.hash = `room?roomId=${result.roomId}`;
       });
   }
 
