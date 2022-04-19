@@ -2,6 +2,7 @@ import React from 'react';
 import Home from './pages/home';
 import NavbarScreen from './pages/navbar';
 import parseRoute from '../server/parse-route';
+import Room from './pages/room';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -23,6 +24,9 @@ export default class App extends React.Component {
     const { path } = this.state.route;
     if (path === '') {
       return <Home />;
+    } else if (path === 'room') {
+      const roomId = this.state.route.params.get('roomId');
+      return <Room roomId={roomId}/>;
     }
   }
 

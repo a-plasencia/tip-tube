@@ -36,7 +36,7 @@ export default class Home extends React.Component {
     fetch('/api/create', req)
       .then(res => res.json())
       .then(result => {
-        // console.log(result);
+        window.location.hash = `room?roomId=${result.room.roomId}`;
       });
   }
 
@@ -46,15 +46,11 @@ export default class Home extends React.Component {
         <Container>
           <Form onSubmit={this.handleSubmit}>
            <Row className="justify-content-center mt-5">
-             <Col xs="12" lg="4">
+             <Col xs="12" lg="6">
                 <Form.Label className="font-label">Room Name</Form.Label>
                 <Form.Control onChange={this.handleInputChange} value={this.state.roomName} name="roomName" className="mb-4" type="text" required />
               </Col>
-              <Col xs="12" lg="4">
-                <Form.Label className="font-label">Username</Form.Label>
-                <Form.Control onChange={this.handleInputChange} value={this.state.username} name="username" className="mb-4" type="text" required />
-             </Col>
-              <Col xs="12" lg="4">
+              <Col xs="12" lg="6">
                 <Form.Label className="font-label">Insert Youtube Video</Form.Label>
                 <Form.Control onChange={this.handleInputChange} value={this.state.youtubeVideo} name="youtubeVideo" className="mb-4" type="text" required />
               </Col>
