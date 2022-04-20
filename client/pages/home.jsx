@@ -10,7 +10,6 @@ export default class Home extends React.Component {
     super(props);
     this.state = {
       roomName: '',
-      username: '',
       youtubeVideo: ''
     };
     this.handleInputChange = this.handleInputChange.bind(this);
