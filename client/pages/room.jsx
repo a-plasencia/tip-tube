@@ -52,8 +52,6 @@ export default class Room extends React.Component {
     fetch('/api/user/username', req)
       .then(res => res.json())
       .then(result => {
-        // eslint-disable-next-line no-console
-        console.log(result);
         this.setState({
           username: result.username
         });
