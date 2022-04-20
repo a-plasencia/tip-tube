@@ -53,12 +53,10 @@ export default class Room extends React.Component {
       .then(res => res.json())
       .then(result => {
         this.setState({
-          username: result.username
+          username: result.username,
+          modal: false
         });
       });
-    this.setState(prevState => ({
-      modal: !prevState.modal
-    }));
   }
 
   render() {
