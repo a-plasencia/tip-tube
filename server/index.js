@@ -80,6 +80,26 @@ app.post('/api/user/username', (req, res, next) => {
     });
 });
 
+app.post('/api/message', (req, res, next) => {
+  const { content, userId, roomId } = req.body;
+  if (!content || !userId || !roomId) {
+    throw new ClientError(400, 'required field is missing');
+  }
+  const sql = `
+  insert into "messages" ("content", "userId", "roomId", "createdAt")
+  values ($1, $2, $3, now())
+  returning *
+  `;
+  const params = [content, userId, roomId];
+  db.query(sql, params)
+    .then(result => {
+      res.status(201).json(result.rows[0]);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
 app.use(staticMiddleware);
 
 app.use(errorMiddleware);
