@@ -18,7 +18,7 @@ export default class Room extends React.Component {
       modal: true
     };
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleUsernameInput = this.handleUsernameInput.bind(this);
   }
 
   componentDidMount() {
@@ -32,11 +32,12 @@ export default class Room extends React.Component {
       });
   }
 
-  handleInputChange(event) {
+  handleUsernameInput(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
     this.setState({ [name]: value });
+    this.props.handleUsernameInput(event.target.value);
   }
 
   handleSubmit(event) {
@@ -53,6 +54,9 @@ export default class Room extends React.Component {
       .then(result => {
         // eslint-disable-next-line no-console
         console.log(result);
+        this.setState({
+          username: result.username
+        });
       });
     this.setState(prevState => ({
       modal: !prevState.modal
@@ -69,7 +73,7 @@ export default class Room extends React.Component {
           </Modal.Header>
           <Modal.Body>
               <Form.Control
-              onChange={this.handleInputChange}
+              onChange={this.handleUsernameInput}
               value={this.state.username}
               autoFocus
               required
