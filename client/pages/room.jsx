@@ -41,8 +41,19 @@ export default class Room extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    // eslint-disable-next-line no-console
-    console.log(this.state.username);
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    };
+    fetch('/api/user/username', req)
+      .then(res => res.json())
+      .then(result => {
+        // eslint-disable-next-line no-console
+        console.log(result);
+      });
     this.setState(prevState => ({
       modal: !prevState.modal
     }));
