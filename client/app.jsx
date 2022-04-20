@@ -8,8 +8,10 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      navbarText: '',
       route: parseRoute(window.location.hash)
     };
+    this.handleUsernameInput = this.handleUsernameInput.bind(this);
   }
 
   componentDidMount() {
@@ -20,20 +22,24 @@ export default class App extends React.Component {
     });
   }
 
+  handleUsernameInput(username) {
+    this.setState({ navbarText: username });
+  }
+
   renderPage() {
     const { path } = this.state.route;
     if (path === '') {
       return <Home />;
     } else if (path === 'room') {
       const roomId = this.state.route.params.get('roomId');
-      return <Room roomId={roomId}/>;
+      return <Room navbarText={this.state.navbarText} handleUsernameInput={this.handleUsernameInput} roomId={roomId}/>;
     }
   }
 
   render() {
     return (
       <>
-        <NavbarScreen />
+        <NavbarScreen navbarText={this.state.navbarText}/>
         {this.renderPage()}
       </>
     );
