@@ -21,10 +21,14 @@ app.get('/api/room/:roomId', (req, res, next) => {
   }
 
   const sql = `
-  select "roomName",
-         "youtubeVideo"
-    from "rooms"
-   where "roomId" = $1
+select "r"."roomName",
+       "r"."youtubeVideo",
+       "r"."roomId",
+       json_agg("m" order by "createdAt") as "messages"
+  from "rooms" as "r"
+  left join "messages" as "m" using ("roomId")
+ where "r"."roomId" = $1
+ group by "r"."roomId"
   `;
   const params = [roomId];
   db.query(sql, params)
