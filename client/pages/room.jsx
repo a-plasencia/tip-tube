@@ -6,6 +6,7 @@ import Ratio from 'react-bootstrap/Ratio';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
 export default class Room extends React.Component {
   constructor(props) {
@@ -13,12 +14,16 @@ export default class Room extends React.Component {
     this.state = {
       username: '',
       roomId: null,
+      userId: null,
       youtubeVideo: '',
       roomName: '',
-      modal: true
+      modal: true,
+      content: ''
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.messageSend = this.messageSend.bind(this);
     this.handleUsernameInput = this.handleUsernameInput.bind(this);
+    this.handleMessageInput = this.handleMessageInput.bind(this);
   }
 
   componentDidMount() {
@@ -40,6 +45,35 @@ export default class Room extends React.Component {
     this.props.handleUsernameInput(event.target.value);
   }
 
+  handleMessageInput(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    this.setState({ [name]: value });
+  }
+
+  messageSend(event) {
+    // eslint-disable-next-line no-console
+    console.log(this.state);
+    event.preventDefault();
+    const req = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    };
+    fetch('/api/message', req)
+      .then(res => res.json())
+      .then(result => {
+        // eslint-disable-next-line no-console
+        console.log(result);
+        this.setState({
+          content: ''
+        });
+      });
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     const req = {
@@ -54,7 +88,9 @@ export default class Room extends React.Component {
       .then(result => {
         this.setState({
           username: result.username,
-          modal: false
+          userId: result.userId,
+          modal: false,
+          roomId: this.props.roomId
         });
       });
   }
@@ -93,8 +129,8 @@ export default class Room extends React.Component {
             <Col xs={2} lg={2}>
             </Col>
           </Row>
-          <Row className="mt-5">
-            <Col xs={12} lg={8}>
+          <Row className="mt-5 align-content-stretch">
+            <Col className="mb-sm-5 mb-lg-0" xs={12} lg={7}>
               <Ratio aspectRatio="16x9">
                 <iframe src={this.state.youtubeVideo}
                 title="YouTube video player"
@@ -102,6 +138,33 @@ export default class Room extends React.Component {
                 encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen></iframe>
               </Ratio>
+            </Col>
+            <Col xs={12} lg={5}>
+              <Card style={{ height: '100%' }} bg="light">
+                <Card.Body>
+                  <Card.Text>
+                    Hello
+                  </Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <Form onSubmit={this.messageSend}>
+                    <Row className="justify-content-center">
+                      <Col xs={10} lg={9}>
+                        <Form.Control
+                        placeholder="Message"
+                        name="content"
+                        autoFocus
+                        onChange={this.handleMessageInput}
+                        value={this.state.content}
+                        ></Form.Control>
+                      </Col>
+                      <Col xs={2} lg={3}>
+                        <Button type="submit" variant="primary">Send</Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Card.Footer>
+              </Card>
             </Col>
           </Row>
         </Container>
