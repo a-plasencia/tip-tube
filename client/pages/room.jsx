@@ -6,7 +6,7 @@ import Ratio from 'react-bootstrap/Ratio';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
+import Chat from '../components/chat';
 
 export default class Room extends React.Component {
   constructor(props) {
@@ -46,32 +46,9 @@ export default class Room extends React.Component {
   }
 
   handleMessageInput(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-    this.setState({ [name]: value });
   }
 
   messageSend(event) {
-    // eslint-disable-next-line no-console
-    console.log(this.state);
-    event.preventDefault();
-    const req = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state)
-    };
-    fetch('/api/message', req)
-      .then(res => res.json())
-      .then(result => {
-        // eslint-disable-next-line no-console
-        console.log(result);
-        this.setState({
-          content: ''
-        });
-      });
   }
 
   handleSubmit(event) {
@@ -96,6 +73,8 @@ export default class Room extends React.Component {
   }
 
   render() {
+    const roomId = this.props.roomId;
+    const userId = this.state.userId;
     return (
       <>
         <Modal show={this.state.modal}>
@@ -139,32 +118,8 @@ export default class Room extends React.Component {
                 allowFullScreen></iframe>
               </Ratio>
             </Col>
-            <Col xs={12} lg={5}>
-              <Card style={{ height: '100%' }} bg="light">
-                <Card.Body>
-                  <Card.Text>
-                    Hello
-                  </Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                  <Form onSubmit={this.messageSend}>
-                    <Row className="justify-content-center">
-                      <Col xs={10} lg={9}>
-                        <Form.Control
-                        placeholder="Message"
-                        name="content"
-                        autoFocus
-                        onChange={this.handleMessageInput}
-                        value={this.state.content}
-                        ></Form.Control>
-                      </Col>
-                      <Col xs={2} lg={3}>
-                        <Button type="submit" variant="primary">Send</Button>
-                      </Col>
-                    </Row>
-                  </Form>
-                </Card.Footer>
-              </Card>
+            <Col s={12} lg={5}>
+              <Chat userId={userId} roomId={roomId} />
             </Col>
           </Row>
         </Container>
