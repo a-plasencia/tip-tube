@@ -9,9 +9,7 @@ export default class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: '',
-      userId: null,
-      roomId: null
+      content: ''
     };
     this.handleMessageInput = this.handleMessageInput.bind(this);
     this.messageSend = this.messageSend.bind(this);
@@ -22,20 +20,23 @@ export default class Chat extends React.Component {
     const value = target.value;
     const name = target.name;
     this.setState({
-      [name]: value,
-      userId: this.props.userId,
-      roomId: this.props.roomId
+      [name]: value
     });
   }
 
   messageSend(event) {
     event.preventDefault();
+    const messageObj = {
+      content: this.state.content,
+      userId: this.props.userId,
+      roomId: this.props.roomId
+    };
     const req = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(this.state)
+      body: JSON.stringify(messageObj)
     };
     fetch('/api/message', req)
       .then(res => res.json())
