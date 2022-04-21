@@ -21,12 +21,17 @@ app.get('/api/room/:roomId', (req, res, next) => {
   }
 
   const sql = `
-select "r"."roomName",
-       "r"."youtubeVideo",
-       "r"."roomId",
-       json_agg("m" order by "createdAt") as "messages"
-  from "rooms" as "r"
-  left join "messages" as "m" using ("roomId")
+with "roomMessages" as (
+  select "m".*,
+         "u"."username"
+    from "messages" as "m"
+    join "users" as "u" using ("userId")
+   where "m"."roomId" = $1
+)
+select "r".*,
+       json_agg("rm" order by "createdAt") as "messages"
+  from "rooms" as "r",
+       "roomMessages" as "rm"
  where "r"."roomId" = $1
  group by "r"."roomId"
   `;
