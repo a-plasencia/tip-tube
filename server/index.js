@@ -30,8 +30,8 @@ with "roomMessages" as (
 )
 select "r".*,
        json_agg("rm" order by "createdAt") as "messages"
-  from "rooms" as "r",
-       "roomMessages" as "rm"
+  from "rooms" as "r"
+  left join "roomMessages" as rm using ("roomId")
  where "r"."roomId" = $1
  group by "r"."roomId"
   `;
@@ -41,7 +41,10 @@ select "r".*,
       if (!result.rows[0]) {
         throw new ClientError(404, `cannot find room with roomId ${roomId}`);
       }
-      res.status(201).json(result.rows[0]);
+      const results = result.rows[0];
+      const filteredResults = results.messages.filter(function (message) { return message !== null; });
+      results.messages = filteredResults;
+      res.status(201).json(results);
     })
     .catch(err => {
       next(err);

@@ -18,7 +18,8 @@ export default class Room extends React.Component {
       youtubeVideo: '',
       roomName: '',
       modal: true,
-      content: ''
+      content: '',
+      messages: []
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.messageSend = this.messageSend.bind(this);
@@ -32,7 +33,8 @@ export default class Room extends React.Component {
       .then(result => {
         this.setState({
           youtubeVideo: result.youtubeVideo,
-          roomName: result.roomName
+          roomName: result.roomName,
+          messages: result.messages
         });
       });
   }
@@ -75,6 +77,7 @@ export default class Room extends React.Component {
   render() {
     const roomId = this.props.roomId;
     const userId = this.state.userId;
+    const messages = this.state.messages;
     return (
       <>
         <Modal show={this.state.modal}>
@@ -119,7 +122,7 @@ export default class Room extends React.Component {
               </Ratio>
             </Col>
             <Col s={12} lg={5}>
-              <Chat userId={userId} roomId={roomId} />
+              <Chat messages={messages} userId={userId} roomId={roomId} />
             </Col>
           </Row>
         </Container>
