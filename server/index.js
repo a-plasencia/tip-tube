@@ -10,9 +10,15 @@ const db = new pg.Pool({
     rejectUnauthorized: false
   }
 });
+const http = require('http');
 const app = express();
 const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
+const server = http.createServer(app);
+const { Server } = require('socket.io');
+
+// eslint-disable-next-line no-unused-vars
+const io = new Server(server);
 
 app.get('/api/room/:roomId', (req, res, next) => {
   const roomId = Number(req.params.roomId);
@@ -116,7 +122,7 @@ app.use(staticMiddleware);
 
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
 });
