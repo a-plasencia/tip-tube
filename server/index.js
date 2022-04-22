@@ -21,10 +21,19 @@ app.get('/api/room/:roomId', (req, res, next) => {
   }
 
   const sql = `
-  select "roomName",
-         "youtubeVideo"
-    from "rooms"
-   where "roomId" = $1
+with "roomMessages" as (
+  select "m".*,
+         "u"."username"
+    from "messages" as "m"
+    join "users" as "u" using ("userId")
+   where "m"."roomId" = $1
+)
+select "r".*,
+       json_agg("rm" order by "createdAt") as "messages"
+  from "rooms" as "r"
+  left join "roomMessages" as rm using ("roomId")
+ where "r"."roomId" = $1
+ group by "r"."roomId"
   `;
   const params = [roomId];
   db.query(sql, params)
@@ -32,7 +41,10 @@ app.get('/api/room/:roomId', (req, res, next) => {
       if (!result.rows[0]) {
         throw new ClientError(404, `cannot find room with roomId ${roomId}`);
       }
-      res.status(201).json(result.rows[0]);
+      const results = result.rows[0];
+      const filteredResults = results.messages.filter(function (message) { return message !== null; });
+      results.messages = filteredResults;
+      res.status(201).json(results);
     })
     .catch(err => {
       next(err);
@@ -108,4 +120,3 @@ app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
 });
-// Adding comment

@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import ChatContent from './chatContent';
 
 export default class Chat extends React.Component {
   constructor(props) {
@@ -48,12 +49,11 @@ export default class Chat extends React.Component {
   }
 
   render() {
+    const messages = this.props.messages;
     return (
       <Card className="mb-5" style={{ height: '420px' }} bg="light">
-        <Card.Body>
-          <Card.Text>
-            Hello
-          </Card.Text>
+        <Card.Body className="d-flex flex-column-reverse overflow-auto">
+          <ChatContent messages={messages} />
         </Card.Body>
         <Card.Footer>
           <Form onSubmit={this.messageSend}>
