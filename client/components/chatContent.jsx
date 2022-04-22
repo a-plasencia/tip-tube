@@ -1,7 +1,4 @@
 import React from 'react';
-// import Row from 'react-bootstrap/Row';
-// import Col from 'react-bootstrap/Col';
-// import Chat from './chat';
 
 export default class ChatContent extends React.Component {
 
@@ -9,8 +6,8 @@ export default class ChatContent extends React.Component {
     return (
     <ul>
       {
-      this.props.messages.map(messages => (
-        <li key={messages.messageId}>{messages.username}: {messages.content}</li>
+      this.props.messages.map(message => (
+        <li key={message.messageId}>{message.username}: {message.content}</li>
       ))
   }
     </ul>
