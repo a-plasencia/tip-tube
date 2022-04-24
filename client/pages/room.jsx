@@ -7,6 +7,8 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Chat from '../components/chat';
+import { io } from 'socket.io-client';
+const socket = io();
 
 export default class Room extends React.Component {
   constructor(props) {
@@ -36,6 +38,17 @@ export default class Room extends React.Component {
           roomName: result.roomName,
           messages: result.messages
         });
+
+        this.socket = io('/', {
+          query: {
+            roomId: this.props.roomId
+          }
+        });
+
+        socket.on('connection', () => {
+          // console.log('hello');
+        });
+
       });
   }
 

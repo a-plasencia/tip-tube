@@ -17,7 +17,6 @@ app.use(jsonMiddleware);
 const server = http.createServer(app);
 const { Server } = require('socket.io');
 
-// eslint-disable-next-line no-unused-vars
 const io = new Server(server);
 
 app.get('/api/room/:roomId', (req, res, next) => {
@@ -50,6 +49,14 @@ select "r".*,
       const results = result.rows[0];
       const filteredResults = results.messages.filter(function (message) { return message !== null; });
       results.messages = filteredResults;
+
+      io.on('connection', socket => {
+        // console.log('a user connected');
+        socket.on('disconnect', () => {
+          // console.log('user disconnected');
+        });
+      });
+
       res.status(201).json(results);
     })
     .catch(err => {
@@ -111,7 +118,26 @@ app.post('/api/message', (req, res, next) => {
   const params = [content, userId, roomId];
   db.query(sql, params)
     .then(result => {
-      res.status(201).json(result.rows[0]);
+      const results = result.rows[0];
+      const messageSql = `
+      select "content",
+             "username"
+      from "messages"
+      join "users" using ("userId")
+      where "userId" = $1 and "messageId" = $2
+      `;
+      const paramsSelect = [userId, results.messageId];
+      db.query(messageSql, paramsSelect)
+        .then(result => {
+          const toEmit = result.rows[0];
+
+          // io.to(`roomId=${results.roomId}`).emit('message', `${toEmit.username}: ${toEmit.content}`);
+
+          res.status(201).json(toEmit);
+        })
+        .catch(err => {
+          next(err);
+        });
     })
     .catch(err => {
       next(err);
