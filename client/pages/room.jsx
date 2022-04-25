@@ -39,14 +39,16 @@ export default class Room extends React.Component {
           messages: result.messages
         });
 
-        this.socket = io('/', {
+        this.socket = io.connect('localhost:3000/#room', {
           query: {
             roomId: this.props.roomId
           }
         });
 
         socket.on('connection', () => {
-          // console.log('hello');
+
+          // eslint-disable-next-line no-console
+          console.log('hello');
         });
 
       });

@@ -51,9 +51,11 @@ select "r".*,
       results.messages = filteredResults;
 
       io.on('connection', socket => {
-        // console.log('a user connected');
+        // eslint-disable-next-line no-console
+        console.log('a user connected');
         socket.on('disconnect', () => {
-          // console.log('user disconnected');
+          // eslint-disable-next-line no-console
+          console.log('user disconnected');
         });
       });
 
