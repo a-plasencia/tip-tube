@@ -8,6 +8,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Chat from '../components/chat';
 import { io } from 'socket.io-client';
+
+// eslint-disable-next-line no-unused-vars
 const socket = io();
 
 export default class Room extends React.Component {
@@ -39,16 +41,12 @@ export default class Room extends React.Component {
           messages: result.messages
         });
 
-        this.socket = io.connect('localhost:3000/#room', {
-          query: {
-            roomId: this.props.roomId
-          }
+        this.socket = io('/room', {
         });
 
-        socket.on('connection', () => {
-
+        this.socket.on('hi', data => {
           // eslint-disable-next-line no-console
-          console.log('hello');
+          console.log(data);
         });
 
       });

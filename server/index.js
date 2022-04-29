@@ -18,6 +18,18 @@ const server = http.createServer(app);
 const { Server } = require('socket.io');
 
 const io = new Server(server);
+io.emit('hello');
+const room = io.of('/room');
+
+room.on('connection', socket => {
+  // eslint-disable-next-line no-console
+  console.log('a user connected');
+  room.emit('hi', 'hello good people of socket');
+  socket.on('disconnect', () => {
+    // eslint-disable-next-line no-console
+    console.log('user disconnected');
+  });
+});
 
 app.get('/api/room/:roomId', (req, res, next) => {
   const roomId = Number(req.params.roomId);
@@ -49,15 +61,6 @@ select "r".*,
       const results = result.rows[0];
       const filteredResults = results.messages.filter(function (message) { return message !== null; });
       results.messages = filteredResults;
-
-      io.on('connection', socket => {
-        // eslint-disable-next-line no-console
-        console.log('a user connected');
-        socket.on('disconnect', () => {
-          // eslint-disable-next-line no-console
-          console.log('user disconnected');
-        });
-      });
 
       res.status(201).json(results);
     })
