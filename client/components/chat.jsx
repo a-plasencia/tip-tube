@@ -58,7 +58,7 @@ export default class Chat extends React.Component {
         <Card.Footer>
           <Form onSubmit={this.messageSend}>
             <Row className="justify-content-between">
-              <Col xs={9}>
+              <Col xs={8} sm={9} m={10}>
                 <Form.Control
                   placeholder="Message"
                   name="content"
@@ -67,7 +67,7 @@ export default class Chat extends React.Component {
                   value={this.state.content}
                 ></Form.Control>
               </Col>
-              <Col>
+              <Col xs={4} sm={3} m={2}>
                 <Button type="submit" variant="primary">Send</Button>
               </Col>
             </Row>
