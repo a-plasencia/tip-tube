@@ -21,13 +21,7 @@ const io = new Server(server);
 const room = io.of('/room');
 
 room.on('connection', socket => {
-  // eslint-disable-next-line no-console
-  console.log('client connected', socket.id);
   socket.join(socket.handshake.query.roomId);
-  socket.on('disconnect', () => {
-    // eslint-disable-next-line no-console
-    console.log('client disconnected', socket.id);
-  });
 });
 
 app.get('/api/room/:roomId', (req, res, next) => {
