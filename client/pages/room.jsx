@@ -9,9 +9,6 @@ import Button from 'react-bootstrap/Button';
 import Chat from '../components/chat';
 import { io } from 'socket.io-client';
 
-// eslint-disable-next-line no-unused-vars
-const socket = io();
-
 export default class Room extends React.Component {
   constructor(props) {
     super(props);
@@ -32,6 +29,19 @@ export default class Room extends React.Component {
   }
 
   componentDidMount() {
+
+    this.socket = io('/room', {
+      query: {
+        roomId: this.props.roomId
+      }
+    });
+
+    this.socket.on('chatMessage', data => {
+      this.setState({
+        messages: this.state.messages.concat(data)
+      });
+    });
+
     fetch(`/api/room/${this.props.roomId}`)
       .then(res => res.json())
       .then(result => {
@@ -40,15 +50,6 @@ export default class Room extends React.Component {
           roomName: result.roomName,
           messages: result.messages
         });
-
-        this.socket = io('/room', {
-        });
-
-        this.socket.on('hi', data => {
-          // eslint-disable-next-line no-console
-          console.log(data);
-        });
-
       });
   }
 

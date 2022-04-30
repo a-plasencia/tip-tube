@@ -18,16 +18,15 @@ const server = http.createServer(app);
 const { Server } = require('socket.io');
 
 const io = new Server(server);
-io.emit('hello');
 const room = io.of('/room');
 
 room.on('connection', socket => {
   // eslint-disable-next-line no-console
-  console.log('a user connected');
-  room.emit('hi', 'hello good people of socket');
+  console.log('client connected', socket.id);
+  socket.join(socket.handshake.query.roomId);
   socket.on('disconnect', () => {
     // eslint-disable-next-line no-console
-    console.log('user disconnected');
+    console.log('client disconnected', socket.id);
   });
 });
 
@@ -126,7 +125,8 @@ app.post('/api/message', (req, res, next) => {
       const results = result.rows[0];
       const messageSql = `
       select "content",
-             "username"
+             "username",
+             "messageId"
       from "messages"
       join "users" using ("userId")
       where "userId" = $1 and "messageId" = $2
@@ -135,9 +135,7 @@ app.post('/api/message', (req, res, next) => {
       db.query(messageSql, paramsSelect)
         .then(result => {
           const toEmit = result.rows[0];
-
-          // io.to(`roomId=${results.roomId}`).emit('message', `${toEmit.username}: ${toEmit.content}`);
-
+          room.to(roomId).emit('chatMessage', toEmit);
           res.status(201).json(toEmit);
         })
         .catch(err => {

@@ -42,6 +42,7 @@ export default class Chat extends React.Component {
     fetch('/api/message', req)
       .then(res => res.json())
       .then(result => {
+
         this.setState({
           content: ''
         });
