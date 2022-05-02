@@ -10,9 +10,19 @@ const db = new pg.Pool({
     rejectUnauthorized: false
   }
 });
+const http = require('http');
 const app = express();
 const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
+const server = http.createServer(app);
+const { Server } = require('socket.io');
+
+const io = new Server(server);
+const room = io.of('/room');
+
+room.on('connection', socket => {
+  socket.join(socket.handshake.query.roomId);
+});
 
 app.get('/api/room/:roomId', (req, res, next) => {
   const roomId = Number(req.params.roomId);
@@ -44,6 +54,7 @@ select "r".*,
       const results = result.rows[0];
       const filteredResults = results.messages.filter(function (message) { return message !== null; });
       results.messages = filteredResults;
+
       res.status(201).json(results);
     })
     .catch(err => {
@@ -105,7 +116,25 @@ app.post('/api/message', (req, res, next) => {
   const params = [content, userId, roomId];
   db.query(sql, params)
     .then(result => {
-      res.status(201).json(result.rows[0]);
+      const results = result.rows[0];
+      const messageSql = `
+      select "content",
+             "username",
+             "messageId"
+      from "messages"
+      join "users" using ("userId")
+      where "userId" = $1 and "messageId" = $2
+      `;
+      const paramsSelect = [userId, results.messageId];
+      db.query(messageSql, paramsSelect)
+        .then(result => {
+          const toEmit = result.rows[0];
+          room.to(roomId).emit('chatMessage', toEmit);
+          res.status(201).json(toEmit);
+        })
+        .catch(err => {
+          next(err);
+        });
     })
     .catch(err => {
       next(err);
@@ -116,7 +145,7 @@ app.use(staticMiddleware);
 
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
 });

@@ -7,6 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Chat from '../components/chat';
+import { io } from 'socket.io-client';
 
 export default class Room extends React.Component {
   constructor(props) {
@@ -28,6 +29,19 @@ export default class Room extends React.Component {
   }
 
   componentDidMount() {
+
+    this.socket = io('/room', {
+      query: {
+        roomId: this.props.roomId
+      }
+    });
+
+    this.socket.on('chatMessage', data => {
+      this.setState({
+        messages: this.state.messages.concat(data)
+      });
+    });
+
     fetch(`/api/room/${this.props.roomId}`)
       .then(res => res.json())
       .then(result => {
@@ -37,6 +51,10 @@ export default class Room extends React.Component {
           messages: result.messages
         });
       });
+  }
+
+  componentWillUnmount() {
+    this.socket.disconnect();
   }
 
   handleUsernameInput(event) {
