@@ -53,6 +53,10 @@ export default class Room extends React.Component {
       });
   }
 
+  componentWillUnmount() {
+    this.socket.disconnect();
+  }
+
   handleUsernameInput(event) {
     const target = event.target;
     const value = target.value;
