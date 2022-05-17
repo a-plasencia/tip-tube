@@ -2,14 +2,12 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Ratio from 'react-bootstrap/Ratio';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Chat from '../components/chat';
 import { io } from 'socket.io-client';
-// import GetYoutubeId from 'get-youtube-id';
-// import Youtube from 'react-youtube';
+import ReactPlayer from 'react-player';
 
 export default class Room extends React.Component {
   constructor(props) {
@@ -22,7 +20,9 @@ export default class Room extends React.Component {
       roomName: '',
       modal: true,
       content: '',
-      messages: []
+      messages: [],
+      played: 0,
+      duration: 0
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.messageSend = this.messageSend.bind(this);
@@ -94,10 +94,31 @@ export default class Room extends React.Component {
       });
   }
 
+  // handleDuration = duration => {
+  //   console.log('onDuration', duration)
+  //   this.setState({ duration })
+  // }
+
+  // handleProgress = state => {
+  //   // console.log('onProgress', state)
+  //   // We only want to update time slider if we are not currently seeking
+  //   if (!this.state.seeking) {
+  //     this.setState(state)
+  //   }
+  // }
+
+  // ref = player => {
+  //   this.player = player
+  // }
+
   render() {
     const roomId = this.props.roomId;
     const userId = this.state.userId;
     const messages = this.state.messages;
+    // eslint-disable-next-line no-unused-vars
+    const duration = this.state.duration;
+    // eslint-disable-next-line no-unused-vars
+    const played = this.state.played;
     return (
       <>
         <Modal show={this.state.modal}>
@@ -133,13 +154,26 @@ export default class Room extends React.Component {
           </Row>
           <Row className="mt-5 align-content-stretch">
             <Col className="mb-sm-5 mb-lg-0" xs={12} lg={7}>
-              <Ratio aspectRatio="16x9">
+              <div className='player-wrapper'>
+                <ReactPlayer
+                ref={this.ref}
+                className="react-player"
+                url={this.state.youtubeVideo}
+                controls={true}
+                width='100%'
+                height='100%'
+                onDuration={this.handleDuration}
+                onProgress={this.handleProgress}
+                />
+              {/* <Ratio aspectRatio="16x9">
                 <iframe src={this.state.youtubeVideo}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write;
                 encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen></iframe>
               </Ratio>
+               */}
+              </div>
             </Col>
             <Col s={12} lg={5}>
               <Chat messages={messages} userId={userId} roomId={roomId} />
