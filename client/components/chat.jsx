@@ -14,6 +14,7 @@ export default class Chat extends React.Component {
     };
     this.handleMessageInput = this.handleMessageInput.bind(this);
     this.messageSend = this.messageSend.bind(this);
+    this.onStamp = this.onStamp.bind(this);
   }
 
   handleMessageInput(event) {
@@ -49,10 +50,22 @@ export default class Chat extends React.Component {
       });
   }
 
+  // onStamp() {
+  //   const totalSeconds = this.props.duration * this.props.played;
+  //   console.log(totalSeconds);
+  //   const dateTime = new Date(null);
+  //   dateTime.setSeconds(totalSeconds);
+  //   const formattedTime = dateTime.toISOString().substr(11, 8);
+  //   console.log(formattedTime);
+  // }
+
   render() {
     const messages = this.props.messages;
     return (
       <Card className="mb-5" style={{ height: '420px' }} bg="light">
+        <Card.Header>
+          <Button onClick={this.onStamp} variant="danger">Stamp</Button>
+        </Card.Header>
         <Card.Body className="d-flex flex-column-reverse overflow-auto">
           <ChatContent messages={messages} />
         </Card.Body>

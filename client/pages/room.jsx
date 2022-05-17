@@ -94,13 +94,13 @@ export default class Room extends React.Component {
       });
   }
 
-  // handleDuration = duration => {
+  // handleDuration = (duration) => {
   //   console.log('onDuration', duration)
   //   this.setState({ duration })
   // }
 
   // handleProgress = state => {
-  //   // console.log('onProgress', state)
+  //   console.log('onProgress', state)
   //   // We only want to update time slider if we are not currently seeking
   //   if (!this.state.seeking) {
   //     this.setState(state)
@@ -115,9 +115,7 @@ export default class Room extends React.Component {
     const roomId = this.props.roomId;
     const userId = this.state.userId;
     const messages = this.state.messages;
-    // eslint-disable-next-line no-unused-vars
     const duration = this.state.duration;
-    // eslint-disable-next-line no-unused-vars
     const played = this.state.played;
     return (
       <>
@@ -165,18 +163,10 @@ export default class Room extends React.Component {
                 onDuration={this.handleDuration}
                 onProgress={this.handleProgress}
                 />
-              {/* <Ratio aspectRatio="16x9">
-                <iframe src={this.state.youtubeVideo}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write;
-                encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen></iframe>
-              </Ratio>
-               */}
               </div>
             </Col>
             <Col s={12} lg={5}>
-              <Chat messages={messages} userId={userId} roomId={roomId} />
+              <Chat duration={duration} played={played} messages={messages} userId={userId} roomId={roomId} />
             </Col>
           </Row>
         </Container>
