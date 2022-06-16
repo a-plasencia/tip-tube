@@ -21,13 +21,14 @@ export default class Room extends React.Component {
       modal: true,
       content: '',
       messages: [],
-      played: 0,
-      duration: 0
+      state: {},
+      player: {}
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.messageSend = this.messageSend.bind(this);
     this.handleUsernameInput = this.handleUsernameInput.bind(this);
     this.handleMessageInput = this.handleMessageInput.bind(this);
+    this.handleProgress = this.handleProgress.bind(this);
   }
 
   componentDidMount() {
@@ -94,29 +95,17 @@ export default class Room extends React.Component {
       });
   }
 
-  // handleDuration = (duration) => {
-  //   console.log('onDuration', duration)
-  //   this.setState({ duration })
-  // }
-
-  // handleProgress = state => {
-  //   console.log('onProgress', state)
-  //   // We only want to update time slider if we are not currently seeking
-  //   if (!this.state.seeking) {
-  //     this.setState(state)
-  //   }
-  // }
-
-  // ref = player => {
-  //   this.player = player
-  // }
+  handleProgress(state) {
+    if (!this.state.seeking) {
+      this.setState({ state });
+    }
+  }
 
   render() {
     const roomId = this.props.roomId;
     const userId = this.state.userId;
     const messages = this.state.messages;
-    const duration = this.state.duration;
-    const played = this.state.played;
+    const state = this.state.state;
     return (
       <>
         <Modal show={this.state.modal}>
@@ -166,7 +155,7 @@ export default class Room extends React.Component {
               </div>
             </Col>
             <Col s={12} lg={5}>
-              <Chat duration={duration} played={played} messages={messages} userId={userId} roomId={roomId} />
+              <Chat state={state} messages={messages} userId={userId} roomId={roomId} />
             </Col>
           </Row>
         </Container>

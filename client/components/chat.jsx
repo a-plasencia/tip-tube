@@ -50,14 +50,15 @@ export default class Chat extends React.Component {
       });
   }
 
-  // onStamp() {
-  //   const totalSeconds = this.props.duration * this.props.played;
-  //   console.log(totalSeconds);
-  //   const dateTime = new Date(null);
-  //   dateTime.setSeconds(totalSeconds);
-  //   const formattedTime = dateTime.toISOString().substr(11, 8);
-  //   console.log(formattedTime);
-  // }
+  onStamp() {
+    const totalSeconds = this.props.state.playedSeconds;
+    const dateTime = new Date(null);
+    dateTime.setSeconds(totalSeconds);
+    const formattedTime = dateTime.toISOString().substr(11, 8);
+    this.setState({
+      content: formattedTime + ' ' + this.state.content
+    });
+  }
 
   render() {
     const messages = this.props.messages;
