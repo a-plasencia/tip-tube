@@ -21,8 +21,7 @@ export default class Room extends React.Component {
       modal: true,
       content: '',
       messages: [],
-      state: {},
-      player: {}
+      state: {}
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.messageSend = this.messageSend.bind(this);
