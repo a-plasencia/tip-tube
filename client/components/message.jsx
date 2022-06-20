@@ -9,8 +9,12 @@ export default class Message extends React.Component {
 
   onTsClick(event) {
     const timeStamp = event.target.getAttribute('data-ts');
-    // eslint-disable-next-line no-console
-    console.log('value of timestamp is: ', timeStamp);
+    if (timeStamp !== null) {
+      const [hours, minutes, seconds] = timeStamp.split(':');
+      // eslint-disable-next-line no-unused-vars
+      const totalSeconds = Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds);
+    }
+
   }
 
   render() {

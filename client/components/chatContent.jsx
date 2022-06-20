@@ -8,7 +8,7 @@ export default class ChatContent extends React.Component {
     <ul>
       {
         this.props.messages.map(message => (
-          <Message key={message.messageId} message={message} />
+          <Message youtubeVideo={this.props.youtubeVideo} key={message.messageId} message={message} />
         ))
       }
     </ul>

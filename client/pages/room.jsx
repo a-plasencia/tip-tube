@@ -105,6 +105,7 @@ export default class Room extends React.Component {
     const userId = this.state.userId;
     const messages = this.state.messages;
     const state = this.state.state;
+    const youtubeVideo = this.state.youtubeVideo;
     return (
       <>
         <Modal show={this.state.modal}>
@@ -148,13 +149,12 @@ export default class Room extends React.Component {
                 controls={true}
                 width='100%'
                 height='100%'
-                onDuration={this.handleDuration}
                 onProgress={this.handleProgress}
                 />
               </div>
             </Col>
             <Col s={12} lg={5}>
-              <Chat state={state} messages={messages} userId={userId} roomId={roomId} />
+              <Chat youtubeVideo={youtubeVideo} state={state} messages={messages} userId={userId} roomId={roomId} />
             </Col>
           </Row>
         </Container>
