@@ -73,6 +73,10 @@ export default class Room extends React.Component {
   messageSend(event) {
   }
 
+  onTsClick(timeStamp) {
+    this.setState({ youtubeVideo: timeStamp });
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     const req = {
@@ -154,7 +158,7 @@ export default class Room extends React.Component {
               </div>
             </Col>
             <Col s={12} lg={5}>
-              <Chat youtubeVideo={youtubeVideo} state={state} messages={messages} userId={userId} roomId={roomId} />
+              <Chat youtubeVideo={youtubeVideo} onTsClick={this.onTsClick} state={state} messages={messages} userId={userId} roomId={roomId} />
             </Col>
           </Row>
         </Container>

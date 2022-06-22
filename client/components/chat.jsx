@@ -60,6 +60,9 @@ export default class Chat extends React.Component {
     });
   }
 
+  onTsClick(timeStamp) {
+  }
+
   render() {
     const messages = this.props.messages;
     return (
@@ -68,7 +71,7 @@ export default class Chat extends React.Component {
           <Button onClick={this.onStamp} variant="danger">Stamp</Button>
         </Card.Header>
         <Card.Body className="d-flex flex-column-reverse overflow-auto">
-          <ChatContent youtubeVideo={this.props.youtubeVideo} messages={messages} />
+          <ChatContent youtubeVideo={this.props.youtubeVideo} onTsClick={this.onTsClick} messages={messages} />
         </Card.Body>
         <Card.Footer>
           <Form onSubmit={this.messageSend}>
