@@ -28,6 +28,8 @@ export default class Room extends React.Component {
     this.handleUsernameInput = this.handleUsernameInput.bind(this);
     this.handleMessageInput = this.handleMessageInput.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
+    this.handleTimeStamp = this.handleTimeStamp.bind(this);
+    this.ref = this.ref.bind(this);
   }
 
   componentDidMount() {
@@ -73,10 +75,6 @@ export default class Room extends React.Component {
   messageSend(event) {
   }
 
-  onTsClick(timeStamp) {
-    this.setState({ youtubeVideo: timeStamp });
-  }
-
   handleSubmit(event) {
     event.preventDefault();
     const req = {
@@ -104,12 +102,19 @@ export default class Room extends React.Component {
     }
   }
 
+  ref(player) {
+    this.player = player;
+  }
+
+  handleTimeStamp(timeStamp) {
+    this.player.seekTo(timeStamp, 'seconds');
+  }
+
   render() {
     const roomId = this.props.roomId;
     const userId = this.state.userId;
     const messages = this.state.messages;
     const state = this.state.state;
-    const youtubeVideo = this.state.youtubeVideo;
     return (
       <>
         <Modal show={this.state.modal}>
@@ -154,11 +159,12 @@ export default class Room extends React.Component {
                 width='100%'
                 height='100%'
                 onProgress={this.handleProgress}
+                onSeek={this.handleTimeStamp}
                 />
               </div>
             </Col>
             <Col s={12} lg={5}>
-              <Chat youtubeVideo={youtubeVideo} onTsClick={this.onTsClick} state={state} messages={messages} userId={userId} roomId={roomId} />
+              <Chat handleTimeStamp={this.handleTimeStamp} state={state} messages={messages} userId={userId} roomId={roomId} />
             </Col>
           </Row>
         </Container>

@@ -10,17 +10,12 @@ export default class Message extends React.Component {
     this.onTsClick = this.onTsClick.bind(this);
   }
 
-  onTsClick(timestamp, event) {
+  onTsClick(event) {
     const timeStamp = event.target.getAttribute('data-ts');
     if (timeStamp !== null) {
       const [hours, minutes, seconds] = timeStamp.split(':');
       const totalSeconds = Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds);
-      // eslint-disable-next-line no-console
-      console.log('value of totalSeconds is: ', totalSeconds);
-      this.setState({
-        youtubeVideo: this.props.youtubeVideo + `#t=${totalSeconds}s`
-      });
-      this.props.onTsClick(this.state.youtubeVideo);
+      this.props.handleTimeStamp(totalSeconds);
     }
 
   }
