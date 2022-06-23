@@ -28,6 +28,8 @@ export default class Room extends React.Component {
     this.handleUsernameInput = this.handleUsernameInput.bind(this);
     this.handleMessageInput = this.handleMessageInput.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
+    this.handleTimeStamp = this.handleTimeStamp.bind(this);
+    this.ref = this.ref.bind(this);
   }
 
   componentDidMount() {
@@ -100,6 +102,14 @@ export default class Room extends React.Component {
     }
   }
 
+  ref(player) {
+    this.player = player;
+  }
+
+  handleTimeStamp(timeStamp) {
+    this.player.seekTo(timeStamp, 'seconds');
+  }
+
   render() {
     const roomId = this.props.roomId;
     const userId = this.state.userId;
@@ -148,13 +158,13 @@ export default class Room extends React.Component {
                 controls={true}
                 width='100%'
                 height='100%'
-                onDuration={this.handleDuration}
                 onProgress={this.handleProgress}
+                onSeek={this.handleTimeStamp}
                 />
               </div>
             </Col>
             <Col s={12} lg={5}>
-              <Chat state={state} messages={messages} userId={userId} roomId={roomId} />
+              <Chat handleTimeStamp={this.handleTimeStamp} state={state} messages={messages} userId={userId} roomId={roomId} />
             </Col>
           </Row>
         </Container>

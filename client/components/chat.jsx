@@ -68,7 +68,7 @@ export default class Chat extends React.Component {
           <Button onClick={this.onStamp} variant="danger">Stamp</Button>
         </Card.Header>
         <Card.Body className="d-flex flex-column-reverse overflow-auto">
-          <ChatContent messages={messages} />
+          <ChatContent handleTimeStamp={this.props.handleTimeStamp} messages={messages} />
         </Card.Body>
         <Card.Footer>
           <Form onSubmit={this.messageSend}>
