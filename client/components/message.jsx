@@ -4,9 +4,6 @@ import DomPurify from 'dompurify';
 export default class Message extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      youtubeVideo: this.props.youtubeVideo
-    };
     this.onTsClick = this.onTsClick.bind(this);
   }
 
