@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Spinner from 'react-bootstrap/Spinner';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -55,6 +56,14 @@ export default class Home extends React.Component {
               </Col>
             </Row>
            <Button className="float-end mt-2" variant="primary" type="submit">
+             <Spinner
+             className="hidden"
+             as="span"
+             animation="border"
+             role="status"
+             size="sm"
+             aria-hidden="true"
+             />
               Submit
             </Button>
           </Form>

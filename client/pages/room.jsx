@@ -13,6 +13,7 @@ export default class Room extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       username: '',
       roomId: null,
       userId: null,
@@ -54,6 +55,8 @@ export default class Room extends React.Component {
           roomName: result.roomName,
           messages: result.messages
         });
+        // eslint-disable-next-line no-console
+        console.log(ReactPlayer.canPlay(this.state.youtubeVideo));
       });
   }
 
