@@ -8,12 +8,13 @@ import Button from 'react-bootstrap/Button';
 import Chat from '../components/chat';
 import { io } from 'socket.io-client';
 import ReactPlayer from 'react-player';
+import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
 
 export default class Room extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
       username: '',
       roomId: null,
       userId: null,
@@ -22,7 +23,10 @@ export default class Room extends React.Component {
       modal: true,
       content: '',
       messages: [],
-      state: {}
+      state: {},
+      loading: false,
+      confirm: true,
+      error: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.messageSend = this.messageSend.bind(this);
@@ -80,6 +84,10 @@ export default class Room extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({
+      loading: true,
+      confirm: false
+    });
     const req = {
       method: 'POST',
       headers: {
@@ -96,6 +104,12 @@ export default class Room extends React.Component {
           modal: false,
           roomId: this.props.roomId
         });
+      })
+      .catch(err => {
+        this.setState({
+          error: true
+        });
+        console.error('Fetch failed', err);
       });
   }
 
@@ -138,8 +152,19 @@ export default class Room extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button type="submit" variant="primary">
-              Confirm
+              {this.state.confirm ? 'Confirm' : ''}
+              <Spinner
+              className={this.state.loading ? '' : 'd-none'}
+              as="span"
+              animation="border"
+              role="status"
+              size="sm"
+              aria-hidden="true"
+              />
             </Button>
+            <Alert variant="primary" className={this.state.error ? '' : 'd-none'}>
+              Sorry there was an error connecting to the network! Please check your internet connection and try again.
+            </Alert>
           </Modal.Footer>
           </Form>
         </Modal>
