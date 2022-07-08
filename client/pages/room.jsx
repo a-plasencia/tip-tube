@@ -8,6 +8,8 @@ import Button from 'react-bootstrap/Button';
 import Chat from '../components/chat';
 import { io } from 'socket.io-client';
 import ReactPlayer from 'react-player';
+import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
 
 export default class Room extends React.Component {
   constructor(props) {
@@ -21,7 +23,12 @@ export default class Room extends React.Component {
       modal: true,
       content: '',
       messages: [],
-      state: {}
+      state: {},
+      getLoading: false,
+      loading: false,
+      confirm: true,
+      error: false,
+      video: true
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.messageSend = this.messageSend.bind(this);
@@ -52,8 +59,20 @@ export default class Room extends React.Component {
         this.setState({
           youtubeVideo: result.youtubeVideo,
           roomName: result.roomName,
-          messages: result.messages
+          messages: result.messages,
+          getLoading: true
         });
+        if (ReactPlayer.canPlay(this.state.youtubeVideo) !== true) {
+          this.setState({
+            video: false
+          });
+        }
+      })
+      .catch(err => {
+        this.setState({
+          error: true
+        });
+        console.error('Fetch failed', err);
       });
   }
 
@@ -77,6 +96,10 @@ export default class Room extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({
+      loading: true,
+      confirm: false
+    });
     const req = {
       method: 'POST',
       headers: {
@@ -93,6 +116,12 @@ export default class Room extends React.Component {
           modal: false,
           roomId: this.props.roomId
         });
+      })
+      .catch(err => {
+        this.setState({
+          error: true
+        });
+        console.error('Fetch failed', err);
       });
   }
 
@@ -135,8 +164,19 @@ export default class Room extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button type="submit" variant="primary">
-              Confirm
+              {this.state.confirm ? 'Confirm' : ''}
+              <Spinner
+              className={this.state.loading ? '' : 'd-none'}
+              as="span"
+              animation="border"
+              role="status"
+              size="sm"
+              aria-hidden="true"
+              />
             </Button>
+            <Alert variant="primary" className={this.state.error ? '' : 'd-none'}>
+              Sorry there was an error connecting to the network! Please check your internet connection and try again.
+            </Alert>
           </Modal.Footer>
           </Form>
         </Modal>
@@ -161,7 +201,18 @@ export default class Room extends React.Component {
                 onProgress={this.handleProgress}
                 onSeek={this.handleTimeStamp}
                 />
+                <Spinner
+                style={{ width: '4rem', height: '4rem' }}
+                className={this.state.getLoading ? 'd-none' : ''}
+                as="span"
+                animation="border"
+                role="status"
+                aria-hidden="true"
+                />
               </div>
+              <Alert variant ="primary" className={this.state.video ? 'd-none' : ''}>
+                Sorry the video linked is not a valid youtube video.  Please try again
+              </Alert>
             </Col>
             <Col s={12} lg={5}>
               <Chat handleTimeStamp={this.handleTimeStamp} state={state} messages={messages} userId={userId} roomId={roomId} />
