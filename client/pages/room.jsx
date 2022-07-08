@@ -24,9 +24,11 @@ export default class Room extends React.Component {
       content: '',
       messages: [],
       state: {},
+      getLoading: false,
       loading: false,
       confirm: true,
-      error: false
+      error: false,
+      video: true
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.messageSend = this.messageSend.bind(this);
@@ -57,10 +59,20 @@ export default class Room extends React.Component {
         this.setState({
           youtubeVideo: result.youtubeVideo,
           roomName: result.roomName,
-          messages: result.messages
+          messages: result.messages,
+          getLoading: true
         });
-        // eslint-disable-next-line no-console
-        console.log(ReactPlayer.canPlay(this.state.youtubeVideo));
+        if (ReactPlayer.canPlay(this.state.youtubeVideo) !== true) {
+          this.setState({
+            video: false
+          });
+        }
+      })
+      .catch(err => {
+        this.setState({
+          error: true
+        });
+        console.error('Fetch failed', err);
       });
   }
 
@@ -189,7 +201,18 @@ export default class Room extends React.Component {
                 onProgress={this.handleProgress}
                 onSeek={this.handleTimeStamp}
                 />
+                <Spinner
+                style={{ width: '4rem', height: '4rem' }}
+                className={this.state.getLoading ? 'd-none' : ''}
+                as="span"
+                animation="border"
+                role="status"
+                aria-hidden="true"
+                />
               </div>
+              <Alert variant ="primary" className={this.state.video ? 'd-none' : ''}>
+                Sorry the video linked is not a valid youtube video.  Please try again
+              </Alert>
             </Col>
             <Col s={12} lg={5}>
               <Chat handleTimeStamp={this.handleTimeStamp} state={state} messages={messages} userId={userId} roomId={roomId} />
