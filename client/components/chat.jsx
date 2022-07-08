@@ -5,12 +5,17 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import ChatContent from './chatContent';
+import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
 
 export default class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: ''
+      content: '',
+      loading: false,
+      send: true,
+      error: false
     };
     this.handleMessageInput = this.handleMessageInput.bind(this);
     this.messageSend = this.messageSend.bind(this);
@@ -28,6 +33,10 @@ export default class Chat extends React.Component {
 
   messageSend(event) {
     event.preventDefault();
+    this.setState({
+      loading: true,
+      send: false
+    });
     const messageObj = {
       content: this.state.content,
       userId: this.props.userId,
@@ -45,19 +54,29 @@ export default class Chat extends React.Component {
       .then(result => {
 
         this.setState({
-          content: ''
+          content: '',
+          loading: false,
+          send: true
         });
+      })
+      .catch(err => {
+        this.setState({
+          error: true
+        });
+        console.error('Fetch failed', err);
       });
   }
 
   onStamp() {
     const totalSeconds = this.props.state.playedSeconds;
-    const dateTime = new Date(null);
-    dateTime.setSeconds(totalSeconds);
-    const formattedTime = dateTime.toISOString().substr(11, 8);
-    this.setState({
-      content: formattedTime + ' ' + this.state.content
-    });
+    if (totalSeconds !== undefined) {
+      const dateTime = new Date(null);
+      dateTime.setSeconds(totalSeconds);
+      const formattedTime = dateTime.toISOString().substr(11, 8);
+      this.setState({
+        content: formattedTime + ' ' + this.state.content
+      });
+    }
   }
 
   render() {
@@ -83,8 +102,23 @@ export default class Chat extends React.Component {
                 ></Form.Control>
               </Col>
               <Col>
-                <Button type="submit" variant="primary">Send</Button>
+                <Button type="submit" variant="primary">
+                  {this.state.send ? 'Send' : ''}
+                  <Spinner
+                  className={this.state.loading ? '' : 'd-none'}
+                  as="span"
+                  animation="border"
+                  role="status"
+                  size="sm"
+                  aria-hidden="true"
+                  />
+                </Button>
               </Col>
+            </Row>
+            <Row>
+              <Alert variant="primary" className={this.state.error ? '' : 'd-none'}>
+                Sorry there was an error connecting to the network! Please check your internet connection and try again.
+              </Alert>
             </Row>
           </Form>
         </Card.Footer>

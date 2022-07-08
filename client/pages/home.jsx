@@ -28,30 +28,6 @@ export default class Home extends React.Component {
     this.setState({ [name]: value });
   }
 
-  loadingSpinner() {
-    if (this.state.loading === true) {
-      return '';
-    } else {
-      return 'd-none';
-    }
-  }
-
-  submitSpinner() {
-    if (this.state.submit === true) {
-      return 'Submit';
-    } else {
-      return '';
-    }
-  }
-
-  error() {
-    if (this.state.error === true) {
-      return 'justify-content-center mt-4';
-    } else {
-      return 'd-none justify-content-center mt-4';
-    }
-  }
-
   handleSubmit(event) {
     event.preventDefault();
     this.setState({
@@ -79,9 +55,6 @@ export default class Home extends React.Component {
   }
 
   render() {
-    const loadingSpinner = this.loadingSpinner();
-    const submit = this.submitSpinner();
-    const error = this.error();
     return (
       <>
         <Container>
@@ -99,9 +72,9 @@ export default class Home extends React.Component {
             <Row>
               <Col>
                 <Button className="float-end mt-2 mb-2" variant="primary" type="submit">
-                {submit}
+                {this.state.submit ? 'Submit' : ''}
                 <Spinner
-                className={`${loadingSpinner}`}
+                className={this.state.loading ? '' : 'd-none'}
                 as="span"
                 animation="border"
                 role="status"
@@ -112,7 +85,9 @@ export default class Home extends React.Component {
               </Col>
             </Row>
             <Row>
-              <Alert variant="primary" className={`${error}`}>Sorry, there was an error connecting to the network! Please check your internet connection and try again.</Alert>
+              <Alert variant="primary" className={this.state.error ? '' : 'd-none'}>
+                Sorry, there was an error connecting to the network! Please check your internet connection and try again.
+              </Alert>
             </Row>
           </Form>
         </Container>
