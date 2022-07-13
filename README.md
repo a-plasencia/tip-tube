@@ -55,7 +55,7 @@ cd Final-Project
 npm install
 ```
 
-3. Make a copy of the provided .env.example file
+3. Make a copy of the provided .env.example file, remember to change the .env where prompted
 ```shell
 cp .env.example .env
 ```
