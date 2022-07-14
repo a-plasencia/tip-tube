@@ -47,7 +47,7 @@ Try the application live at https://tip-tube.herokuapp.com/
 1. Clone the repository
 ```shell
 git clone https://github.com/a-plasencia/tip-tube.git
-cd Final-Project
+cd tip-tube
 ```
 
 2. Install all dependencies with NPM
