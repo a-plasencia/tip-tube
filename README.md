@@ -46,7 +46,7 @@ Try the application live at https://tip-tube.herokuapp.com/
 
 1. Clone the repository
 ```shell
-git clone https://github.com/a-plasencia/Final-Project.git
+git clone https://github.com/a-plasencia/tip-tube.git
 cd Final-Project
 ```
 
@@ -67,7 +67,7 @@ sudo service postgresql start
 
 5. Create a database
 ```shell
-createdb Final-Project
+createdb tip-tube
 ```
 
 6. Import the database schema
