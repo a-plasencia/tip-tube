@@ -7,7 +7,7 @@ export default class NavbarScreen extends React.Component {
     return (
     <Navbar bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand>Final P</Navbar.Brand>
+        <Navbar.Brand>tip-tube</Navbar.Brand>
         <Navbar.Text className="justify-content-end text-white">{this.props.navbarText}</Navbar.Text>
       </Container>
     </Navbar>
