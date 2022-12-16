@@ -5,7 +5,7 @@ A full stack web application for users who want to chat about a specific video i
 I created tip-tube because I wanted to try my hand at recreating a web application that was previously called flow-feedback.  My group of friends used to use flow-feedback to analyze Youtube videos and talk about them in detail, and I wanted to create a place that could replicate that experience.
 ## Live Demo
 
-Try the application live at https://tip-tube.herokuapp.com/
+Try the application live at https://tip-tube.plasenciaalexander.com/
 ## Technologies Used
 
 - React.js
