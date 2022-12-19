@@ -19,7 +19,7 @@ Try the application live at https://tip-tube.plasenciaalexander.com/
 - Babel
 - Webpack
 - PGweb
-- Heroku
+- Dokku
 - ReactPlayer
 
 ## Preview
